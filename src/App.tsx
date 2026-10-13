@@ -78,6 +78,7 @@ import { paneDrag } from "./lib/paneDrag.ts";
 import { SplitDropPreview } from "./components/SplitDropPreview.tsx";
 import { CrashProbe, RegionCrash } from "./components/AppCrash.tsx";
 import { RenderBoundary } from "./components/RenderBoundary.tsx";
+import { menuItems, Slot } from "./slots/registry.tsx"; // local extensions (docs/extensions.md)
 
 const APP_TITLE = "herdr web ui";
 /** how soon after a key press a focus counts as the user's own (lastKeyAtRef) */
@@ -1341,6 +1342,7 @@ export function App() {
   }, []);
   const closeNewSession = useCallback(() => { setNewSessionOpen(false); setNewPrefill(null); setNewFields(null); }, []);
 
+  const slotCtx = { machineId: selectedMachineId, pane: selectedPane, openFile: (path: string) => openFile({ path, paneId: selectedPaneId, machineId: selectedMachineId }) }; // local extensions
   const moreItems: RowMenuItem[] = [
     ...(selectedPane && !selectedPane.restore_error ? [{ id: "find", label: t("Find in terminal"), icon: Search, run: actions.openFind }] : []),
     ...(selectedPane && selectedWorkspace
@@ -1354,6 +1356,7 @@ export function App() {
     // the address says where the app is (lib/deepLink.ts); a phone has no address bar to copy it from
     { id: "copy-link", label: t("Copy link"), icon: Link, run: () => void copyText(window.location.href).then((ok) => { if (ok) setHeaderNote("copied"); }) },
     ...(bellVisible ? [{ id: "alerts", label: t("Alerts"), hint: bell.state, checked: bell.on, title: bell.title, icon: Bell, run: () => void bell.run() }] : []),
+    ...menuItems("header.more", slotCtx), // local extensions (docs/extensions.md)
   ];
 
   // the chat's surface is what the pane column shows: the header's pane zone and the tab strip
@@ -1693,6 +1696,7 @@ export function App() {
           onBrowseFolders={(path) => actions.openPalette(folderQueryFor(path, null))}
           onClose={() => setFilesOpen(false)} />
       )}
+      <Slot name="app.overlay" ctx={slotCtx} />{/* local extensions (docs/extensions.md) */}
       {diffViewing !== null && <MachineContext.Provider value={diffViewing.machineId}>
         <RepoDiffViewer key={`${diffViewing.scope}:${diffViewing.path}`} target={diffViewing} onClose={closeDiff} onOpenFile={(path) => openFile({ path, paneId: diffViewing.paneId, machineId: diffViewing.machineId })} keyboardActive={!settingsOpen && viewing === null} />
       </MachineContext.Provider>}
