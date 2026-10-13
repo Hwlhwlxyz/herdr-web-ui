@@ -139,6 +139,7 @@ import { SplitDividers } from "./components/SplitDividers.tsx";
 import { SplitDropPreview } from "./components/SplitDropPreview.tsx";
 import { CrashProbe, RegionCrash } from "./components/AppCrash.tsx";
 import { RenderBoundary } from "./components/RenderBoundary.tsx";
+import { menuItems, Slot } from "./slots/registry.tsx"; // local extensions (custom-docs/extensions.md)
 import { lensOwner, storedView, usePaneLens, usePaneLensState, usePaneViewPicks } from "./lib/usePaneLens.ts";
 import { actionsCan, actionUse, tally, usageCounters, useCountedInboxWays, useShownCount } from "./lib/usageCounters.ts";
 import { useSplitLayout, useSplitRecheck, useSplitState } from "./lib/useSplitView.ts";
@@ -513,6 +514,7 @@ export function App() {
 
 
   const { selectedPane } = useSelectedPane({ snapshot, selectedPaneId });
+  const slotCtx = { machineId: selectedMachineId, pane: selectedPane, openFile: (path: string) => openFile({ path, paneId: selectedPaneId, machineId: selectedMachineId }) }; // local extensions
   // held only while a pane is shown: one hidden under the inbox mode's list keeps no screen on
   useScreenWakeLock(settings.keepScreenOn && locked === false && selectedPane !== null && !inbox.shown);
   const { selectedWorkspace, presentedPaneId } = useSelectedLayout({ selectedPane, snapshot, drawerOpen: drawerOpen || inbox.shown, selectedMachineId, selectedPaneId, setSelectedPaneId, setAutoSelected });
@@ -948,6 +950,7 @@ export function App() {
     // what is left of the pane's items in More itself, a hairline over the first as before
     ...paneMoreItems.filter((item) => !(foldFind && item.id === "search-conversation") && (!foldPane || item.id.startsWith("pane:")))
       .map((item, index) => index === 0 ? { ...item, divider: true } : item),
+    ...menuItems("header.more", slotCtx), // local extensions (custom-docs/extensions.md)
     ...(foldPane && more ? [{ id: "pane-group", label: t("Pane and tab…"), icon: PanelsTopLeft, divider: true, run: () => openMoreGroup("pane", more.anchor) }] : []),
     // the way into the agent inbox (lib/inboxMode.ts), More's last group at every width
     ...(modeOffered ? [{ id: "enter-inbox", label: t("Open agent inbox"), icon: Inbox, divider: true, run: () => { actions.counted?.("inbox", "menu"); enterInbox(); } }] : []),
@@ -1640,6 +1643,7 @@ export function App() {
       }} />
       <SettingsDialog machines={machines} auth={auth} picturesByDefault={picturesByDefault} herdrVersion={shownHealth?.herdr?.version ?? null} herdrRuntime={shownHealth?.herdr ? shownHealth.herdr.runtime ?? "herdr" : null} herdrCore={shownHealth?.herdr_core ?? null} herdrRuntimeFacts={shownHealth?.herdr_runtime ?? null} bootId={shownHealth?.web_ui?.boot_id ?? null} onServerRestarted={() => { void readLocalHealth(); void readBridgeHealth(); void load(); }} security={security} open={settingsOpen} section={settingsSection} linkPage={settingsLinkPage} linkSection={settingsLinkSection} onPage={onSettingsPage} onClose={closeSettings} onUsageLogin={(paneId) => { closeSettings(); selectTarget("local", paneId, "terminal"); void load(); }} onOpenPane={(machineId, paneId) => { closeSettings(); selectTarget(machineId, paneId, "terminal"); void load(); }} actions={actions} updates={updates} onEnableNotifications={enableNotifications} saveError={settingsSaveError} savePaused={settingsSavePaused} saveRetrying={settingsSaveRetrying} onRetrySave={retrySettingsSave} overPreview={(viewing !== null && !fileDocked) || diffViewing !== null || (webPage !== null && !filePanelAvailable)} />
       {filesOpen && !filesDocked && filesDialog(false)}
+      <Slot name="app.overlay" ctx={slotCtx} />{/* local extensions (custom-docs/extensions.md) */}
       {diffViewing !== null && <MachineContext.Provider value={diffViewing.machineId}>
         <RepoDiffViewer key={`${diffViewing.scope}:${diffViewing.path}`} target={diffViewing} onClose={closeDiff} onOpenFile={async (path) => {
           try {

@@ -1,0 +1,374 @@
+/* Project files drawer (src/ext/project-files). Tokens only: src/conventions.test.ts. Every class is pf-. */
+
+.pf-drawer {
+  --pf-indent: var(--space-4);
+  position: fixed;
+  top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-drawer);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-drawer);
+  color: var(--text);
+}
+
+.pf-drawer.is-full {
+  left: 0;
+  width: auto;
+  border-left: 0;
+}
+
+/* the left edge: drag to resize */
+.pf-grip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  width: 6px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.pf-grip:hover,
+.pf-split:hover {
+  background: var(--border-strong);
+}
+
+.pf-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.pf-title {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+
+.pf-root {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pf-actions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.pf-actions .icon-button[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+.pf-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+}
+
+.pf-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.pf-split {
+  cursor: col-resize;
+  border-left: 1px solid var(--border);
+  touch-action: none;
+}
+
+.pf-quick-wrap {
+  position: relative;
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.pf-quick {
+  width: 100%;
+}
+
+.pf-quick-results {
+  position: absolute;
+  top: 100%;
+  right: var(--space-2);
+  left: var(--space-2);
+  z-index: 1;
+  max-height: 50vh;
+  margin: 0;
+  padding: var(--space-1);
+  overflow-y: auto;
+  list-style: none;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-pop);
+}
+
+.pf-quick-row {
+  padding: var(--space-1) var(--space-2);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.pf-quick-row.is-active,
+.pf-quick-row:hover {
+  background: var(--bg-hover);
+}
+
+.pf-tree {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: var(--space-1) 0;
+  overflow: auto;
+  list-style: none;
+  font-size: var(--fs-sm);
+}
+
+.pf-tree:focus-visible {
+  outline: none;
+}
+
+.pf-tree-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 28px;
+  padding-inline-end: var(--space-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.pf-tree-row:hover {
+  background: var(--bg-hover);
+}
+
+.pf-tree-row.is-selected {
+  background: var(--accent-tint);
+  color: var(--text-strong);
+}
+
+.pf-tree:focus-visible .pf-tree-row.is-active {
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.pf-tree-caret {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  color: var(--text-dim);
+}
+
+.pf-tree-caret svg,
+.pf-tree-glyph {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.pf-tree-glyph[data-kind="folder"] {
+  color: var(--accent);
+}
+
+.pf-tree-name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pf-tree-note {
+  padding-block: var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  list-style: none;
+}
+
+.pf-empty {
+  margin: auto;
+  padding: var(--space-6) var(--space-4);
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.pf-preview {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.pf-preview-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.pf-preview-title {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pf-preview-path {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--text-strong);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pf-preview-meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+}
+
+.pf-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-xs);
+  color: var(--notice);
+  border-bottom: 1px solid var(--border);
+}
+
+.pf-notice svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.pf-preview-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--bg);
+}
+
+.pf-code {
+  position: relative;
+  padding: var(--space-2) var(--space-3);
+  overflow: visible;
+}
+
+/* line numbers are where a press picks a line */
+.pf-code[data-line-numbers] .hl-line::before {
+  cursor: pointer;
+}
+
+.pf-pick-band {
+  position: absolute;
+  right: 0;
+  left: 0;
+  background: var(--accent-tint);
+  border-left: 2px solid var(--accent);
+  pointer-events: none;
+}
+
+.pf-pickbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-xs);
+}
+
+.pf-pickbar-hint {
+  color: var(--text-dim);
+}
+
+.pf-pickbar-range {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  color: var(--text-strong);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pf-format {
+  width: auto;
+}
+
+.pf-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.pf-copy svg {
+  width: 14px;
+  height: 14px;
+}
+
+.pf-manual {
+  height: 8em;
+  margin: 0 var(--space-3) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  resize: vertical;
+}
+
+/* under the tree: cd the selected pane to the folder picked */
+.pf-cd {
+  padding: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.pf-cd-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+}
+
+.pf-cd-button svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.pf-cd-label {
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
