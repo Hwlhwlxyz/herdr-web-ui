@@ -8,6 +8,7 @@ import { createRoot } from "react-dom/client";
 import "./fonts/fonts.css";
 import "./styles.css";
 import { App } from "./App.tsx";
+import "./ext/load.ts"; // local extensions (src/ext, custom-docs/extensions.md)
 import { AppCrash, CrashProbe } from "./components/AppCrash.tsx";
 import { FileReader } from "./components/FileReader.tsx";
 import { RenderBoundary } from "./components/RenderBoundary.tsx";
