@@ -17,7 +17,7 @@
 
 | 文件 | 改动 | 合并冲突时 |
 |---|---|---|
-| `src/styles.css` | **文件末尾**追加 `[data-theme="light"][data-palette="eink_custom"] { … }` | 保留这一块即可（解析器扫描整个文件，放在哪里都行） |
+| `src/styles.css` | **文件末尾**追加 `[data-theme="light"][data-palette="eink_custom"] { … }`，以及紧跟其后的关闭动画规则 `[data-palette="eink_custom"] * { animation/transition: none !important }` | 保留这两块即可（解析器扫描整个文件，放在哪里都行；第二块不是主题块，解析器会跳过） |
 | `src/lib/themes.generated.ts` | 生成文件 | 随便选一边，然后运行 `bun run generate:themes` |
 | `DESIGN.md` | 生成的 ANSI 表格多了一列 `eink_custom` | 同上，运行生成脚本 |
 | `src/components/SettingsDialog.tsx` | `THEME_NAMES` 增加 `eink_custom: "E-ink Custom",` | 重新加上这一行 |
@@ -70,7 +70,7 @@ git grep -n "local theme" -- src shared scripts
 | 选中行、标记行 | `accent-tint` `primary-tint` | 桃色 `#ffe8d8` |
 | 危险提示底色 | `danger-tint` | 粉 `#ffe0e0` |
 | 终端选区 | `term-selection` | 较深的桃色 `#ffd0b0` |
-| 弹窗遮罩 | `scrim` | 和其他浅色主题一样用中性黑，但只有 8%：`rgba(0, 0, 0, 0.08)`（白底上约 `#ebebeb`）。普通屏幕上轻微变暗；墨水屏上浅灰背景显示不出来，基本不变色 |
+| 弹窗遮罩 | `scrim` | **完全透明** `transparent`。即使 8% 的变暗，墨水屏也会整屏刷新，影响寿命；透明时打开弹窗背景像素不变，只刷新弹窗那一块。弹窗靠 1px 黑框（`--shadow-pop` 里的边框）和白底区分 |
 | 状态徽章底色 | `status-working/blocked/done-tint` | 桃 `#ffe8d8` / 粉 `#ffe0e0` / 薄荷绿 `#e0f2e0`（色卡里都是「一般」，徽章文字对比度 4.7–5.1:1） |
 | 边框 | `border` / `border-strong` | `#555555` / `#000000` |
 | 文字 | `text` `text-strong` / `text-dim` | `#000000` / `#333333`（在屏上看起来都是黑） |
@@ -100,7 +100,15 @@ git grep -n "local theme" -- src shared scripts
 **已知限制**：灰色都和黑色分不开，所以 `text-dim`、bright black（注释、zsh/fish 的自动补全提示）在屏上看起来和正文一样。
 浅一点的灰（`#999999`）又看不清。可以考虑把 bright black 换成某个颜色，但会让灰色语义的内容变成彩色。
 
-**还没在真机上验证**：`#fff4ec`（悬停）、`#ffd0b0`（终端选区）和遮罩；`#ffe8d8` `#ffe0e0` `#e0f2e0` 在色卡里测过，都是「一般」。
+### 不做动画
+
+动画的每一帧都会让墨水屏刷新一次，所以 eink_custom 下关掉所有 CSS 动画和过渡（`styles.css` 里紧跟颜色块的那条规则）：弹窗和手机底部面板的滑入/淡入、侧栏抽屉、按钮过渡、工作中徽章的脉冲等。
+要用 `!important` 才能盖过各组件自己的动画规则，而 `!important` 只允许写在 `src/styles.css`（`src/conventions.test.ts`），所以这条规则不能放进 `src/ext/appearance/`。
+
+只改 CSS 管不到脚本控制的动画：手机底部面板的拖拽回弹（`src/lib/sheets.ts`）、聊天区的平滑滚动（`ChatView.tsx`）、`Droplet.tsx`。这些只认系统的「减少动态效果」设置，所以**墨水屏设备上请同时打开系统设置**（Android：设置 → 无障碍 → 移除动画）。
+没开系统设置时，面板关闭后会停在最后一帧，等 `sheets.ts` 的超时后才消失，多刷新一次，但不会卡住。
+
+**还没在真机上验证**：`#fff4ec`（悬停）、`#ffd0b0`（终端选区）；`#ffe8d8` `#ffe0e0` `#e0f2e0` 在色卡里测过，都是「一般」。
 
 上游的测试会检查对比度（`src/lib/settings.test.ts` palette）：文字、状态徽章（状态色叠在对应的 tint 上）、代码高亮、ANSI 颜色都要达到 4.5:1。
 
