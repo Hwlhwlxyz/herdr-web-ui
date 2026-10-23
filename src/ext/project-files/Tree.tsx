@@ -1,10 +1,11 @@
 // The folder tree: each folder is listed (`/api/workspace/directories?files=1`) the first time it
 // opens and kept until Refresh; nothing polls.
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
+import { ChevronDown, ChevronRight, Copy, FolderTree } from "lucide-react";
 
-import { ApiError, FileGlyph, useMachineApi, type DirectoryListing } from "../upstream.ts";
+import { ApiError, copyText, FileGlyph, RowMenu, useMachineApi, type DirectoryListing } from "../upstream.ts";
 import { useTx } from "./i18n.ts";
+import { relativeTo } from "./reference.ts";
 
 /** Folders left out unless "show hidden and ignored" is on (dot folders are left out by the server). */
 const IGNORED = new Set(["node_modules", "dist", "build", "target", "out", ".venv", "venv", "__pycache__", ".ovis", "coverage", ".next", ".turbo"]);
@@ -50,6 +51,14 @@ export function Tree({ root, paneId, showHidden, refresh, selected, onSelect, on
   const [active, setActive] = useState(0);
   const generation = useRef(0);
   const treeRef = useRef<HTMLUListElement>(null);
+  // the right-click (a long press on Android) menu of one row; the Menu key or Shift+F10 on the tree opens it for the active row
+  const [menu, setMenu] = useState<{ row: Row; anchor: HTMLElement; point?: { x: number; y: number } } | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
+  useEffect(() => {
+    if (copied === null) return;
+    const timer = window.setTimeout(() => setCopied(null), 2000);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
 
   const load = useCallback(async (path: string, isRoot: boolean) => {
     const asked = generation.current;
@@ -119,6 +128,20 @@ export function Tree({ root, paneId, showHidden, refresh, selected, onSelect, on
   }, [nodes, expanded, root, rootListing, showHidden, tx]);
 
   const focusable = rows.filter((row) => row.kind !== "note");
+  const base = rootListing?.status === "loaded" ? rootListing.listing.path : root;
+  const copy = (text: string): void => { void copyText(text).then((ok) => setCopied(ok ? tx("Copied") : tx("Copy refused: press Ctrl+C"))); };
+  const openMenu = (event: MouseEvent<HTMLLIElement>, row: Row, index: number): void => {
+    event.preventDefault();
+    setActive(index);
+    setMenu({ row, anchor: event.currentTarget, point: { x: event.clientX, y: event.clientY } });
+  };
+  /** The Menu key or Shift+F10 lands on the tree itself, which holds the focus: the active row's menu, under it. */
+  const onTreeContextMenu = (event: MouseEvent<HTMLUListElement>): void => {
+    if (event.target !== event.currentTarget || current === undefined) return;
+    event.preventDefault();
+    const anchor = treeRef.current?.querySelector<HTMLElement>(`[data-index="${focusable.indexOf(current)}"]`);
+    if (anchor) setMenu({ row: current, anchor });
+  };
   const current = focusable[Math.min(active, Math.max(0, focusable.length - 1))];
 
   const onKeyDown = (event: KeyboardEvent<HTMLUListElement>): void => {
@@ -153,8 +176,8 @@ export function Tree({ root, paneId, showHidden, refresh, selected, onSelect, on
   };
 
   let focusIndex = -1;
-  return (
-    <ul ref={treeRef} className="pf-tree" role="tree" aria-label={tx("Files")} tabIndex={0} onKeyDown={onKeyDown}
+  return (<>
+    <ul ref={treeRef} className="pf-tree" role="tree" aria-label={tx("Files")} tabIndex={0} onKeyDown={onKeyDown} onContextMenu={onTreeContextMenu}
       aria-activedescendant={current ? `pf-row-${focusable.indexOf(current)}` : undefined}>
       {rows.map((row) => {
         if (row.kind === "note") return <li key={row.path} className="pf-tree-note" role="none" style={{ paddingInlineStart: `calc(${row.depth} * var(--pf-indent) + var(--space-3))` }}>{row.note}</li>;
@@ -166,7 +189,8 @@ export function Tree({ root, paneId, showHidden, refresh, selected, onSelect, on
             aria-expanded={row.kind === "dir" ? open : undefined} aria-selected={row.path === selected}
             className={`pf-tree-row${index === focusable.indexOf(current!) ? " is-active" : ""}${row.path === selected ? " is-selected" : ""}`}
             style={{ paddingInlineStart: `calc(${row.depth} * var(--pf-indent) + var(--space-2))` }} title={row.name}
-            onClick={() => { setActive(index); if (row.kind === "dir") toggle(row.path); onSelect(row.path, row.kind as "dir" | "file"); }}>
+            onClick={() => { setActive(index); if (row.kind === "dir") toggle(row.path); onSelect(row.path, row.kind as "dir" | "file"); }}
+            onContextMenu={(event) => openMenu(event, row, index)}>
             <span className="pf-tree-caret" aria-hidden="true">{row.kind === "dir" ? (open ? <ChevronDown /> : <ChevronRight />) : null}</span>
             <FileGlyph name={row.name} kind={row.kind === "dir" ? "directory" : "file"} className="pf-tree-glyph" />
             <span className="pf-tree-name">{row.name}</span>
@@ -174,5 +198,11 @@ export function Tree({ root, paneId, showHidden, refresh, selected, onSelect, on
         );
       })}
     </ul>
-  );
+    {menu && <RowMenu anchor={menu.anchor} point={menu.point} restoreFocusTo={treeRef.current} title={menu.row.name} variant="paths" onClose={() => setMenu(null)} items={[
+      { id: "copy-absolute", label: tx("Copy absolute path"), hint: menu.row.path, icon: Copy, run: () => copy(menu.row.path) },
+      { id: "copy-relative", label: tx("Copy relative path"), hint: relativeTo(base, menu.row.path), icon: FolderTree, run: () => copy(relativeTo(base, menu.row.path)) },
+    ]} />}
+    <span className="visually-hidden" role="status">{copied ?? ""}</span>
+    {copied !== null && <p className="pf-tree-toast" aria-hidden="true">{copied}</p>}
+  </>);
 }
