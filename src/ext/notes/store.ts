@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 
 import { newId, parseNotes, type Note } from "./notes.ts";
 
-const KEY = "herdr-web-ui:ext:notes:";
+const KEY = "ovis:ext:notes:";
 const NOTES = KEY + "notes";
 const ACTIVE = KEY + "active";
 const WIDTH = KEY + "width";

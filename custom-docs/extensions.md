@@ -19,7 +19,7 @@
 |---|---|---|
 | `src/main.tsx` | `import "./ext/load.ts";` | 放在 `import { App }` 之后，保证扩展的 CSS 在 `styles.css` 之后加载 |
 | `src/App.tsx` | `import { menuItems, Slot } from "./slots/registry.tsx";` | 加在 import 区末尾 |
-| `src/App.tsx` | `const slotCtx = { machineId, pane, openFile };` | 紧挨在 `const moreItems: RowMenuItem[] = [` 的上一行 |
+| `src/App.tsx` | `const slotCtx = { machineId, pane, openFile };` | 紧挨在 `const selectedPane = …` 的下一行（这一行很少变动；放在 `moreItems` 上方时曾与上游冲突） |
 | `src/App.tsx` | `...menuItems("header.more", slotCtx),` | 加在 `moreItems` 数组的最后一项 |
 | `src/App.tsx` | `<Slot name="app.overlay" ctx={slotCtx} />` | 加在 `FilesDialog` 和 `RepoDiffViewer` 之间。放在 FileViewer 之前，所以 FileViewer 会显示在扩展上层 |
 
@@ -67,7 +67,7 @@ src/ext/
 **约束**（`custom-docs/ext-agents.md`）：
 - **扩展里不要调用 `t("…")`**：上游的 `src/lib/i18n.test.ts` 会扫描所有 `t(` 调用，并要求每个字符串都存在于上游的词典中。扩展使用自己的词典，函数名为 `tx`（`useTx()` / `txNow()`）。目前只有中文翻译，其他语言显示英文
 - CSS 只能使用 token（`var(--…)`），不能写颜色字面量，不能用 `!important`（`src/conventions.test.ts` 会检查）；所有 class 都加扩展前缀（项目文件用 `pf-`）
-- localStorage 键名统一为 `herdr-web-ui:ext:<扩展名>:<键>`，并且必须放在 try/catch 里
+- localStorage 键名统一为 `ovis:ext:<扩展名>:<键>`，并且必须放在 try/catch 里
 
 ---
 
@@ -100,7 +100,7 @@ src/ext/
 |---|---|
 | 根目录 | 打开时为当前 pane 的 `foreground_cwd ?? cwd`；切换 pane 后自动跟随。[↑] 进入上级目录，[⌂] 回到 pane 的目录 |
 | 目录树 | 展开时才通过 `fetchDirectories(path, hidden, files=true, paneId)` 加载，加载过的结果会缓存；[⟳] 重新加载所有已展开的目录；键盘操作为 ↑↓←→ / Home / End / Enter，`role="tree"` |
-| 隐藏目录 | 默认隐藏以 `.` 开头的目录（由服务端过滤），以及 `node_modules dist build target out .venv venv __pycache__ .herdr-web-ui coverage .next .turbo`；[👁] 一键全部显示 |
+| 隐藏目录 | 默认隐藏以 `.` 开头的目录（由服务端过滤），以及 `node_modules dist build target out .venv venv __pycache__ .ovis coverage .next .turbo`；[👁] 一键全部显示 |
 | 快速打开 | `fetchPaneFiles(paneId, q, 50)`（服务端优先用 `git ls-files`，否则遍历目录），150ms 防抖，支持 ↑↓ 和 Enter |
 | 预览 | `fetchFileInfo` → 文本文件通过 Range 请求读取最多 **2MB / 10,000 行**（`readFilePreviewText`），用 `useHighlightedLines` + `CodeLines` 显示行号和高亮。超出上限时显示提示；非文本文件引导到查看器 |
 | 选中行 | ①在代码上拖选（监听 `selectionchange`，根据 `[data-line]` 计算起止行，三击选整行时不会多算一行）②点击行号选中一行，Shift+点击行号扩展选区。选中的行用 `--accent-tint` 高亮 |
@@ -152,9 +152,9 @@ src/ext/
 ### 存储
 | localStorage 键 | 内容 |
 |---|---|
-| `herdr-web-ui:ext:notes:notes` | 笔记数组 `[{ id, text, updated }]` |
-| `herdr-web-ui:ext:notes:active` | 当前显示的笔记 id |
-| `herdr-web-ui:ext:notes:width` | 抽屉宽度（px） |
+| `ovis:ext:notes:notes` | 笔记数组 `[{ id, text, updated }]` |
+| `ovis:ext:notes:active` | 当前显示的笔记 id |
+| `ovis:ext:notes:width` | 抽屉宽度（px） |
 
 ### 文件
 | 文件 | 内容 |
