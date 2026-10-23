@@ -6,6 +6,7 @@
 | 文件 | 内容 |
 |---|---|
 | [extensions.md](extensions.md) | 本地扩展（slot 机制）的设计、对上游文件的挂载点、各扩展说明 |
+| [ext-agents.md](ext-agents.md) | 修改 `src/ext/` 和 `src/slots/` 时必须遵守的规则（给 agent 和人看） |
 
 fork 独有的代码在 `src/slots/` 和 `src/ext/`（规则见 `custom-docs/ext-agents.md`）。
 对上游已有文件的改动只有挂载点，都带 `local extensions` 注释，可以这样列出：
@@ -13,3 +14,6 @@ fork 独有的代码在 `src/slots/` 和 `src/ext/`（规则见 `custom-docs/ext
 ```
 git grep -n "local extensions" -- src/App.tsx src/main.tsx
 ```
+
+注意：`ext-agents.md` 不在 `src/ext/` 里，agent 不会自动读到它。让 agent 改扩展时，请在提示里写上
+「先读 custom-docs/ext-agents.md」。
