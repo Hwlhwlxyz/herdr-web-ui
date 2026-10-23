@@ -2952,7 +2952,7 @@ button, a, [role="button"] {
   --indicator-done: #008080;
   --indicator-idle: #007a00;
   --indicator-unknown: #555555;
-  --scrim: rgba(168, 68, 0, 0.1);
+  --scrim: rgba(0, 0, 0, 0.08);
   --shadow-drawer: 0 0 40px rgba(0, 0, 0, 0);
   --shadow-pop: 0 16px 48px rgba(0, 0, 0, 0), 0 0 0 1px var(--border);
   --shadow-card: 0 4px 16px rgba(0, 0, 0, 0);
