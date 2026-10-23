@@ -14,6 +14,7 @@ export { useSettings } from "../lib/settings.ts";
 export { useMediaQuery } from "../lib/useMediaQuery.ts";
 export { CodeLines, useHighlightedLines } from "../components/HighlightedCode.tsx";
 export { FileGlyph } from "../components/FileGlyph.tsx";
+export { RowMenu } from "../components/RowMenu.tsx";
 
 export type { RowMenuItem } from "../components/RowMenu.tsx";
 export type { DirectoryListing, FileInfo, HerdrPane } from "../../shared/protocol.ts";
