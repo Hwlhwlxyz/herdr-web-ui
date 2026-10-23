@@ -18,4 +18,4 @@ merge cleanly. Design and rules in full: custom-docs/extensions.md.
   (src/conventions.test.ts scans src/**/*.css). Prefix every class with the extension's short
   name (`pf-` for project-files) so nothing collides with upstream.
 - One folder per extension: `src/ext/<name>/index.ts` registers it (src/ext/load.ts finds it).
-- localStorage keys: `herdr-web-ui:ext:<name>:<key>`, always inside try/catch. Never store tokens.
+- localStorage keys: `ovis:ext:<name>:<key>`, always inside try/catch. Never store tokens.

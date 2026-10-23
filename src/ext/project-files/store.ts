@@ -3,7 +3,7 @@ import { useSyncExternalStore } from "react";
 
 import type { CopyFormat } from "./reference.ts";
 
-const KEY = "herdr-web-ui:ext:project-files:";
+const KEY = "ovis:ext:project-files:";
 
 function load<T>(name: string, fallback: T, valid: (value: unknown) => value is T): T {
   try {
