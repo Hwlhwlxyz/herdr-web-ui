@@ -326,6 +326,8 @@ const THEME_NAMES: Record<ThemeId, string> = {
   dracula: "Dracula",
   nord: "Nord",
   vesper: "Vesper",
+  // local theme (custom-docs/eink-theme.md)
+  eink_custom: "E-ink Custom",
 };
 
 /** One theme as a small picture of the app in its own colours, a sidebar beside a pane, its name under it (the cards T3 Code and herdr-app show). */
