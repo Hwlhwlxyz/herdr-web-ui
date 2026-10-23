@@ -7,6 +7,7 @@
 |---|---|
 | [extensions.md](extensions.md) | 本地扩展（slot 机制）的设计、对上游文件的挂载点、各扩展说明 |
 | [ext-agents.md](ext-agents.md) | 修改 `src/ext/` 和 `src/slots/` 时必须遵守的规则（给 agent 和人看） |
+| [eink-theme.md](eink-theme.md) | 本地主题 `eink_custom`（彩色墨水屏）：改了哪些上游文件、配色、合并后怎么检查 |
 
 fork 独有的代码在 `src/slots/` 和 `src/ext/`（规则见 `custom-docs/ext-agents.md`）。
 对上游已有文件的改动只有挂载点，都带 `local extensions` 注释，可以这样列出：

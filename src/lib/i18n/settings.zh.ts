@@ -46,6 +46,8 @@ export const SETTINGS_ZH: Record<string, string> = {
   "Dracula": "Dracula",
   "Nord": "Nord",
   "Vesper": "Vesper",
+  // local theme (custom-docs/eink-theme.md)
+  "E-ink Custom": "电子墨水（自定义）",
   "Density": "密度",
   "Comfortable": "宽松",
   "Compact": "紧凑",
