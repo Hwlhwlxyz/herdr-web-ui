@@ -105,7 +105,8 @@ src/ext/
 | 预览 | `fetchFileInfo` → 文本文件通过 Range 请求读取最多 **2MB / 10,000 行**（`readFilePreviewText`），用 `useHighlightedLines` + `CodeLines` 显示行号和高亮。超出上限时显示提示；非文本文件引导到查看器 |
 | 选中行 | ①在代码上拖选（监听 `selectionchange`，根据 `[data-line]` 计算起止行，三击选整行时不会多算一行）②点击行号选中一行，Shift+点击行号扩展选区。选中的行用 `--accent-tint` 高亮 |
 | 复制引用 | 格式可选（记住上次的选择）：只复制路径和行号 `src/a.ts:3-7` / 路径 + 代码 / Markdown 代码块（围栏比代码中最长的反引号串多一个）。路径相对于树的根目录，不在根目录下时用绝对路径；Windows 路径统一转换为 `/` |
-| 复制路径 | 复制相对路径 |
+| 复制路径 | 预览标题栏的 [⧉] 复制相对路径 |
+| **右键菜单** | 目录树中的文件或目录右键（Android 上长按；键盘焦点在树上时按菜单键或 Shift+F10）弹出菜单：「复制绝对路径」（服务端返回的原始路径，Windows 上保留 `\`）和「复制相对路径」（相对于树的根目录，统一用 `/`，不在根目录下时为绝对路径）。菜单里在每项后面显示将要复制的路径。使用上游的 `RowMenu`，手机宽度下是底部面板。复制成功后树下方显示「已复制」2 秒 |
 | **cd 到选中目录** | 目录树下方的按钮「cd 到 <目录名>」。目标是树中最后选中的一项：选中目录就用该目录，选中文件就用文件所在目录，什么都没选就用树的根目录。点击后往**当前选中的 pane** 输入切换目录命令并回车（`POST /api/pane/input` 写入命令，再 `POST /api/pane/keys ["Enter"]`，都是已有接口，不使用 bracketed paste）。命令按 shell 生成（根据 pane 的 title / terminal_title 猜测）：pwsh 用 `Set-Location -LiteralPath '…'`；cmd 用 `cd /d "…"`；bash/zsh 等用 `cd -- '…'`；无法判断时用 `cd "…"`。**pane 里正在运行 Agent（`pane.agent` 不为空）或 pane 没有在运行时，按钮禁用**，否则命令会被当作消息发给 Agent。pane 的目录变化后，目录树**不会**自动跳到新目录（只有切换 pane 时才会跟随），避免刚 cd 完树就被重置 |
 | 剪贴板不可用时 | 例如通过局域网 HTTP 访问时没有剪贴板权限，会显示一个已全选的只读文本框，方便手动复制 |
 
@@ -117,7 +118,7 @@ src/ext/
 | `index.ts` | 注册菜单项（`header.more`）和抽屉（`app.overlay`） |
 | `store.ts` | 抽屉的开关状态，以及按设备保存的偏好（宽度、树宽度、最大化、显示隐藏目录、复制格式）；使用 `useSyncExternalStore`，App 里不增加任何 state |
 | `ProjectFiles.tsx` | 抽屉外壳、标题栏、宽度拖动、快速打开、移动端两级页面 |
-| `Tree.tsx` | 懒加载的目录树 |
+| `Tree.tsx` | 懒加载的目录树、右键菜单 |
 | `Preview.tsx` | 预览、选中行、复制 |
 | `reference.ts` | 生成相对路径和引用文本（纯函数，有测试 `reference.test.ts`） |
 | `terminal.ts` | 判断 shell、生成 cd 命令、检查是否允许发送、发送（有测试 `terminal.test.ts`） |
@@ -131,6 +132,7 @@ src/ext/
 - 目录树没有做虚拟滚动（每层最多 500 项，暂时够用）
 - 文件变化不会自动刷新，需要手动点 [⟳]
 - 超过 10,000 行的文件只能预览前 10,000 行
+- iOS Safari 长按不会触发 `contextmenu`，所以 iPhone / iPad 上打不开右键菜单
 
 ---
 
