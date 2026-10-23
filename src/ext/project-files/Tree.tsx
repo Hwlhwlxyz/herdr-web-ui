@@ -7,7 +7,7 @@ import { ApiError, FileGlyph, useMachineApi, type DirectoryListing } from "../up
 import { useTx } from "./i18n.ts";
 
 /** Folders left out unless "show hidden and ignored" is on (dot folders are left out by the server). */
-const IGNORED = new Set(["node_modules", "dist", "build", "target", "out", ".venv", "venv", "__pycache__", ".herdr-web-ui", "coverage", ".next", ".turbo"]);
+const IGNORED = new Set(["node_modules", "dist", "build", "target", "out", ".venv", "venv", "__pycache__", ".ovis", "coverage", ".next", ".turbo"]);
 
 type Node =
   | { status: "loading" }
