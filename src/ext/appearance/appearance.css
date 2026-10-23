@@ -1,0 +1,18 @@
+/*
+ * Chinese UI: the bundled --font-ui opens with Pretendard, which has Latin and Hangul but no Chinese,
+ * so a Chinese line mixed Pretendard's Latin with the system's Chinese face and read as two weights.
+ * Under lang zh (src/lib/settings.ts sets <html lang="zh-CN">) a Chinese face that also draws Latin
+ * leads, so a whole line comes from one font. :root:lang() outranks styles.css's :root block.
+ */
+:root:lang(zh) {
+  --font-ui: "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC", "Source Han Sans SC", "HarmonyOS Sans SC", system-ui, sans-serif;
+}
+
+/*
+ * eink_custom: the browser's own selection is a system blue, and gray text on it did not read on the
+ * e-paper screen. Draw selected text black on the theme's peach selection instead.
+ */
+[data-palette="eink_custom"] ::selection {
+  background: var(--term-selection);
+  color: var(--text-strong);
+}
