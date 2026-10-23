@@ -1,4 +1,4 @@
-# src/ext/
+# Rules for src/ext/ (agents and people)
 
 Local extensions that live beside upstream herdr-web-ui without editing it, so upstream commits
 merge cleanly. Design and rules in full: custom-docs/extensions.md.
