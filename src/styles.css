@@ -2959,7 +2959,7 @@ button, a, [role="button"] {
   --indicator-done: #008080;
   --indicator-idle: #007a00;
   --indicator-unknown: #555555;
-  --scrim: rgba(0, 0, 0, 0.08);
+  --scrim: transparent;
   --shadow-drawer: 0 0 40px rgba(0, 0, 0, 0);
   --shadow-pop: 0 16px 48px rgba(0, 0, 0, 0), 0 0 0 1px var(--border);
   --shadow-card: 0 4px 16px rgba(0, 0, 0, 0);
@@ -2991,4 +2991,16 @@ button, a, [role="button"] {
   --syntax-type: #008080;
   --syntax-variable: #000000;
   --syntax-meta: #0033aa;
+}
+
+/* local theme (custom-docs/eink-theme.md) - eink_custom draws no motion: every frame of a slide
+   or a fade is one more refresh of the e-paper panel. The system's "reduce motion" setting also
+   stops what scripts animate (sheets.ts, a smooth scroll); this covers the CSS without it.
+   A closing sheet's last frame is then removed by sheets.ts's own timeout. */
+[data-palette="eink_custom"] *,
+[data-palette="eink_custom"] *::before,
+[data-palette="eink_custom"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
 }
