@@ -70,7 +70,7 @@ git grep -n "local theme" -- src shared scripts
 | 选中行、标记行 | `accent-tint` `primary-tint` | 桃色 `#ffe8d8` |
 | 危险提示底色 | `danger-tint` | 粉 `#ffe0e0` |
 | 终端选区 | `term-selection` | 较深的桃色 `#ffd0b0` |
-| 弹窗遮罩 | `scrim` | 很淡的半透明橙 `rgba(168, 68, 0, 0.1)` |
+| 弹窗遮罩 | `scrim` | 和其他浅色主题一样用中性黑，但只有 8%：`rgba(0, 0, 0, 0.08)`（白底上约 `#ebebeb`）。普通屏幕上轻微变暗；墨水屏上浅灰背景显示不出来，基本不变色 |
 | 状态徽章底色 | `status-working/blocked/done-tint` | 桃 `#ffe8d8` / 粉 `#ffe0e0` / 薄荷绿 `#e0f2e0`（色卡里都是「一般」，徽章文字对比度 4.7–5.1:1） |
 | 边框 | `border` / `border-strong` | `#555555` / `#000000` |
 | 文字 | `text` `text-strong` / `text-dim` | `#000000` / `#333333`（在屏上看起来都是黑） |
