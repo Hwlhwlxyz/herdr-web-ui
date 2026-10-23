@@ -1,0 +1,113 @@
+/* Scratch notes drawer (src/ext/notes). Tokens only: src/conventions.test.ts. Every class is sn-. */
+
+.sn-drawer {
+  position: fixed;
+  top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-drawer);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-drawer);
+  color: var(--text);
+}
+
+.sn-drawer.is-full {
+  left: 0;
+  width: auto;
+  border-left: 0;
+}
+
+/* the left edge: drag to resize */
+.sn-grip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  width: 6px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.sn-grip:hover {
+  background: var(--border-strong);
+}
+
+.sn-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.sn-title {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+
+.sn-pick {
+  flex: 1;
+  min-width: 0;
+}
+
+.sn-actions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.sn-actions .sn-armed {
+  color: var(--danger-text);
+  background: var(--danger-tint);
+}
+
+.sn-editor {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  margin: 0;
+  padding: var(--space-3);
+  border: 0;
+  resize: none;
+  outline: none;
+  background: var(--bg-input);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  tab-size: 4;
+}
+
+.sn-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  padding-bottom: calc(var(--space-2) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--border);
+}
+
+.sn-status {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sn-status.is-error {
+  color: var(--danger-text);
+}
+
+.sn-copy {
+  flex: none;
+}
