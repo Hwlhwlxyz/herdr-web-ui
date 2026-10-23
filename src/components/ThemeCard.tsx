@@ -26,6 +26,8 @@ export const THEME_NAMES: Record<ThemeId, string> = {
   dracula: "Dracula",
   nord: "Nord",
   vesper: "Vesper",
+  // local theme (custom-docs/eink-theme.md)
+  eink_custom: "E-ink Custom",
 };
 
 /**

@@ -19,6 +19,8 @@ export const SETTINGS_JA: Record<string, string> = {
   "Appearance": "外観",
   "Shown in dark mode": "ダークモードで表示されます",
   "Shown in light mode": "ライトモードで表示されます",
+  // local theme (custom-docs/eink-theme.md)
+  "E-ink Custom": "電子ペーパー（カスタム）",
   "Terminal font size": "ターミナルのフォントサイズ",
   "Applied to every terminal pane": "すべてのターミナルペインに適用されます",
   "Decrease terminal font size": "ターミナルの文字を小さく",

@@ -19,6 +19,8 @@ export const SETTINGS_ZH: Record<string, string> = {
   "Appearance": "外观",
   "Shown in dark mode": "在深色模式下显示",
   "Shown in light mode": "在浅色模式下显示",
+  // local theme (custom-docs/eink-theme.md)
+  "E-ink Custom": "电子墨水（自定义）",
   "Terminal font size": "终端字号",
   "Applied to every terminal pane": "应用于所有终端窗格",
   "Decrease terminal font size": "减小终端字号",

@@ -19,6 +19,8 @@ export const SETTINGS_KO: Record<string, string> = {
   "Appearance": "모양",
   "Shown in dark mode": "다크 모드에서 표시됩니다",
   "Shown in light mode": "라이트 모드에서 표시됩니다",
+  // local theme (custom-docs/eink-theme.md)
+  "E-ink Custom": "전자잉크(사용자 지정)",
   "Terminal font size": "터미널 글자 크기",
   "Applied to every terminal pane": "모든 터미널 패널에 적용됩니다",
   "Decrease terminal font size": "터미널 글자 작게",
