@@ -2912,3 +2912,76 @@ button {
 button, a, [role="button"] {
   -webkit-tap-highlight-color: transparent;
 }
+
+/* local theme (custom-docs/eink-theme.md) - eink_custom: color e-paper (Kaleido-style filter screens).
+   Tuned from a swatch test on the device (custom-docs/eink-theme.md): every gray reads as black, and
+   dark green, brown, olive and violet read as one color, so each role takes one hue from a family
+   that stayed apart - black, red, orange, green, teal, magenta, blue. Surfaces are white; the few
+   extra backgrounds are pale tints of the accent and status hues (peach, pink, mint), never grays
+   (gray backgrounds did not show on the screen) and never yellow (glaring on an ordinary screen). */
+[data-theme="light"][data-palette="eink_custom"] {
+  --bg: #ffffff;
+  --bg-panel: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: #fff4ec;
+  --bg-input: #ffffff;
+  --border: #555555;
+  --border-strong: #000000;
+  --bubble-border: var(--border);
+  --text: #000000;
+  --text-dim: #333333;
+  --text-strong: #000000;
+  --accent: #a84400;
+  --accent-tint: #ffe8d8;
+  --primary: #000000;
+  --primary-hover: #333333;
+  --primary-text: #ffffff;
+  --primary-tint: #ffe8d8;
+  --status-idle: #555555;
+  --status-working: #a84400;
+  --status-blocked: #cc0000;
+  --status-done: #007a00;
+  --status-working-tint: #ffe8d8;
+  --status-blocked-tint: #ffe0e0;
+  --status-done-tint: #e0f2e0;
+  --danger-tint: #ffe0e0;
+  --danger-text: #cc0000;
+  --notice: #a84400;
+  --indicator-working: #a84400;
+  --indicator-blocked: #cc0000;
+  --indicator-done: #008080;
+  --indicator-idle: #007a00;
+  --indicator-unknown: #555555;
+  --scrim: rgba(168, 68, 0, 0.1);
+  --shadow-drawer: 0 0 40px rgba(0, 0, 0, 0);
+  --shadow-pop: 0 16px 48px rgba(0, 0, 0, 0), 0 0 0 1px var(--border);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0);
+  --term-bg: #ffffff;
+  --term-fg: #000000;
+  --term-cursor: #000000;
+  --term-selection: #ffd0b0;
+  --term-black: #000000;
+  --term-red: #cc0000;
+  --term-green: #007a00;
+  --term-yellow: #a84400;
+  --term-blue: #0033aa;
+  --term-magenta: #a0007a;
+  --term-cyan: #008080;
+  --term-white: #444444;
+  --term-bright-black: #555555;
+  --term-bright-red: #e00000;
+  --term-bright-green: #008a00;
+  --term-bright-yellow: #c05000;
+  --term-bright-blue: #1565c0;
+  --term-bright-magenta: #b8008a;
+  --term-bright-cyan: #007f7f;
+  --term-bright-white: #000000;
+  --line-number: #555555;
+  --syntax-function: #a84400;
+  --syntax-keyword: #a0007a;
+  --syntax-string: #007a00;
+  --syntax-number: #cc0000;
+  --syntax-type: #008080;
+  --syntax-variable: #000000;
+  --syntax-meta: #0033aa;
+}

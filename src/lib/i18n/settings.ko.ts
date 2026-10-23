@@ -46,6 +46,8 @@ export const SETTINGS_KO: Record<string, string> = {
   "Dracula": "Dracula",
   "Nord": "Nord",
   "Vesper": "Vesper",
+  // local theme (custom-docs/eink-theme.md)
+  "E-ink Custom": "전자잉크(사용자 지정)",
   "Density": "밀도",
   "Comfortable": "여유",
   "Compact": "촘촘",
