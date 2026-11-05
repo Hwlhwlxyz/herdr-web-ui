@@ -17,7 +17,7 @@
 
 | 文件 | 改动 | 合并冲突时 |
 |---|---|---|
-| `src/styles.css` | **文件末尾**追加 `[data-theme="light"][data-palette="eink_custom"] { … }`，以及紧跟其后的关闭动画规则 `[data-palette="eink_custom"] * { animation/transition: none !important }` | 保留这两块即可（解析器扫描整个文件，放在哪里都行；第二块不是主题块，解析器会跳过） |
+| `src/styles.css` | **文件末尾**追加 `[data-theme="light"][data-palette="eink_custom"] { … }`，紧跟其后的关闭动画规则 `[data-palette="eink_custom"] * { animation/transition: none !important }`，以及常亮块状光标规则 `[data-palette="eink_custom"] .xterm … .xterm-cursor.xterm-cursor-block` | 保留这三块即可（解析器扫描整个文件，放在哪里都行；后两块不是主题块，解析器会跳过） |
 | `src/lib/themes.generated.ts` | 生成文件 | 随便选一边，然后运行 `bun run generate:themes` |
 | `DESIGN.md` | 生成的 ANSI 表格多了一列 `eink_custom` | 同上，运行生成脚本 |
 | `src/components/SettingsDialog.tsx` | `THEME_NAMES` 增加 `eink_custom: "E-ink Custom",` | 重新加上这一行 |
@@ -107,6 +107,13 @@ git grep -n "local theme" -- src shared scripts
 
 只改 CSS 管不到脚本控制的动画：手机底部面板的拖拽回弹（`src/lib/sheets.ts`）、聊天区的平滑滚动（`ChatView.tsx`）、`Droplet.tsx`。这些只认系统的「减少动态效果」设置，所以**墨水屏设备上请同时打开系统设置**（Android：设置 → 无障碍 → 移除动画）。
 没开系统设置时，面板关闭后会停在最后一帧，等 `sheets.ts` 的超时后才消失，多刷新一次，但不会卡住。
+
+**终端光标**：xterm 的闪烁块状光标只靠闪烁动画涂色，不闪时的规则又比不过格子的内联颜色，所以关掉动画后，落在程序自己上过色的格子上时光标就消失了。
+`styles.css` 里紧跟关闭动画规则的那条规则把块状光标改成常亮（`--term-cursor` 底、`--term-bg` 字），顺带少了每 0.5 秒一次的刷新。竖线、下划线光标不受影响。
+
+**已知限制（与主题无关）**：Windows 上的 herdr 不支持 `terminal attach`，窗格靠 `pane.read` 镜像（`server/mirror.ts`），而 `pane.read` 不带光标位置，所以每一帧都隐藏光标。
+新版 Claude Code 用的是终端自己的光标，不再画反色格子，因此在 Windows 上任何主题都看不到 Claude 的输入光标。
+herdr 把 Windows attach 标为 not planned（herdrdev/herdr#4821），上游 web UI 也没有处理（2026-11-05 查过）。Linux/macOS 走 attach，不受影响。
 
 **还没在真机上验证**：`#fff4ec`（悬停）、`#ffd0b0`（终端选区）；`#ffe8d8` `#ffe0e0` `#e0f2e0` 在色卡里测过，都是「一般」。
 
