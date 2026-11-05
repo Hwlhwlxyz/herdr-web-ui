@@ -3681,3 +3681,12 @@ button, a, [role="button"] {
   transition: none !important;
   scroll-behavior: auto !important;
 }
+
+/* local theme (custom-docs/eink-theme.md) - eink_custom: a steady block cursor. xterm paints a
+   blinking block only through its blink animation; its still rule loses to the inline background
+   and color of a cell a program colored itself, so with the motion off above the cursor drew
+   nothing there. Bar and underline need no help: no inline style sets their box-shadow or border. */
+[data-palette="eink_custom"] .xterm .xterm-rows .xterm-cursor.xterm-cursor-block {
+  background-color: var(--term-cursor) !important;
+  color: var(--term-bg) !important;
+}
