@@ -237,5 +237,6 @@ export const SUPPORTED_ENTRIES = [
     terminal: { background: "#ffffff", foreground: "#000000", cursor: "#000000", selectionBackground: "#ffd0b0", black: "#000000", red: "#cc0000", green: "#007a00", yellow: "#a84400", blue: "#0033aa", magenta: "#a0007a", cyan: "#008080", white: "#444444", brightBlack: "#555555", brightRed: "#e00000", brightGreen: "#008a00", brightYellow: "#c05000", brightBlue: "#1565c0", brightMagenta: "#b8008a", brightCyan: "#007f7f", brightWhite: "#000000" },
     bgPanel: "#ffffff",
     bg: "#ffffff",
+    preview: { elevated: "#ffffff", border: "#555555", text: "#000000", textDim: "#333333", accent: "#a84400", primary: "#000000" },
   },
 ] as const;
